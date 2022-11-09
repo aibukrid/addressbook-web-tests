@@ -1,7 +1,6 @@
 package ru.stqa.pft.addressbook;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,43 +11,64 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class GroupCreationTests {
-        private WebDriver driver;
-        private Map<String, Object> vars;
-        JavascriptExecutor js;
-        @BeforeTest
-        public void setUp() {
-            driver = new ChromeDriver();
-            js = (JavascriptExecutor) driver;
-            vars = new HashMap<String, Object>();
-            driver.get("http://localhost/addressbook/group.php");
-            driver.manage().window().maximize();
-            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-            driver.findElement(By.name("user")).click();
-            driver.findElement(By.name("user")).sendKeys("admin");
-            driver.findElement(By.name("pass")).click();
-            driver.findElement(By.name("pass")).sendKeys("secret");
-            driver.findElement(By.cssSelector("input:nth-child(7)")).click();
-        }
+    private WebDriver driver;
+    private Map<String, Object> vars;
+    JavascriptExecutor js;
 
-        @Test
-        public void testGroupCreation() {
-            driver.findElement(By.name("new")).click();
-            driver.findElement(By.name("group_name")).click();
-            driver.findElement(By.name("group_name")).sendKeys("test1");
-            driver.findElement(By.name("group_header")).click();
-            driver.findElement(By.name("group_header")).sendKeys("test2");
-            driver.findElement(By.name("group_footer")).click();
-            driver.findElement(By.name("group_footer")).sendKeys("test3");
-            driver.findElement(By.name("submit")).click();
-            driver.findElement(By.linkText("group page")).click();
-        }
-
-        @AfterTest
-            public void tearDown() {
-            driver.quit();
-        }
+    @BeforeTest
+    public void setUp() {
+        driver = new ChromeDriver();
+        js = (JavascriptExecutor) driver;
+        vars = new HashMap<String, Object>();
+        driver.get("http://localhost/addressbook/group.php");
+        driver.manage().window().maximize();
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        login("user", "pass", By.cssSelector("input:nth-child(7)"), "admin", "secret");
     }
+
+    private void login(String user, String pass, By by, String username, String password) {
+        returnToGroupPage(By.name(user));
+        driver.findElement(By.name(user)).sendKeys(username);
+        returnToGroupPage(By.name(pass));
+        driver.findElement(By.name(pass)).sendKeys(password);
+        returnToGroupPage(by);
+    }
+
+    @Test
+    public void testGroupCreation() {
+        returnToGroupPage(By.linkText("groups"));
+        initGroupCreation();
+        fillGroupForm(new GroupData("test1", "test2", "test3"));
+        returnToGroupPage(By.name("submit"));
+        returnToGroupPage(By.linkText("group page"));
+    }
+
+    private void returnToGroupPage(By group_page) {
+        submitGroupCreation(group_page);
+    }
+
+    private void submitGroupCreation(By submit) {
+        gotoGroupPage(submit);
+    }
+
+    private void fillGroupForm(GroupData groupData) {
+        login("group_name", "group_header", By.name("group_footer"), groupData.name(), groupData.header());
+        driver.findElement(By.name("group_footer")).sendKeys(groupData.footer());
+    }
+
+    private void initGroupCreation() {
+        returnToGroupPage(By.name("new"));
+    }
+
+    private void gotoGroupPage(By groups) {
+        driver.findElement(groups).click();
+    }
+
+    @AfterTest
+    public void tearDown() {
+        driver.quit();
+    }
+}
