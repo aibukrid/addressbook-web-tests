@@ -1,3 +1,5 @@
+package ru.stqa.pft.addressbook;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -21,13 +23,6 @@ public class GroupCreationTests {
             driver = new ChromeDriver();
             js = (JavascriptExecutor) driver;
             vars = new HashMap<String, Object>();
-        }
-        @AfterTest
-        public void tearDown() {
-            driver.quit();
-        }
-        @Test
-        public void testGroupCreation() {
             driver.get("http://localhost/addressbook/group.php");
             driver.manage().window().maximize();
             driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
@@ -37,6 +32,10 @@ public class GroupCreationTests {
             driver.findElement(By.name("pass")).click();
             driver.findElement(By.name("pass")).sendKeys("secret");
             driver.findElement(By.cssSelector("input:nth-child(7)")).click();
+        }
+
+        @Test
+        public void testGroupCreation() {
             driver.findElement(By.name("new")).click();
             driver.findElement(By.name("group_name")).click();
             driver.findElement(By.name("group_name")).sendKeys("test1");
@@ -46,5 +45,10 @@ public class GroupCreationTests {
             driver.findElement(By.name("group_footer")).sendKeys("test3");
             driver.findElement(By.name("submit")).click();
             driver.findElement(By.linkText("group page")).click();
+        }
+
+        @AfterTest
+            public void tearDown() {
+            driver.quit();
         }
     }
