@@ -23,10 +23,14 @@ public class GroupCreationTests {
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
         driver.get("http://localhost/addressbook/group.php");
-        driver.manage().window().maximize();
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        manWinMax(10, 10);
         login("user", "pass", By.cssSelector("input:nth-child(7)"), "admin", "secret");
+    }
+
+    private void manWinMax(int pageload, int implwait) {
+        driver.manage().window().maximize();
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageload));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implwait));
     }
 
     private void login(String user, String pass, By by, String username, String password) {
@@ -46,12 +50,12 @@ public class GroupCreationTests {
         returnToGroupPage(By.linkText("group page"));
     }
 
-    private void returnToGroupPage(By group_page) {
-        submitGroupCreation(group_page);
+    private void gotoGroupPage(By groups) {
+        driver.findElement(groups).click();
     }
 
-    private void submitGroupCreation(By submit) {
-        gotoGroupPage(submit);
+    private void initGroupCreation() {
+        returnToGroupPage(By.name("new"));
     }
 
     private void fillGroupForm(GroupData groupData) {
@@ -59,12 +63,12 @@ public class GroupCreationTests {
         driver.findElement(By.name("group_footer")).sendKeys(groupData.footer());
     }
 
-    private void initGroupCreation() {
-        returnToGroupPage(By.name("new"));
+    private void submitGroupCreation(By submit) {
+        gotoGroupPage(submit);
     }
 
-    private void gotoGroupPage(By groups) {
-        driver.findElement(groups).click();
+    private void returnToGroupPage(By group_page) {
+        submitGroupCreation(group_page);
     }
 
     @AfterTest
