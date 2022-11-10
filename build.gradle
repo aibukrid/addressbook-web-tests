@@ -11,8 +11,9 @@ repositories {
 
 dependencies {
 
-    implementation 'org.seleniumhq.selenium:selenium-java:4.6.0'
     implementation group: 'org.testng', name: 'testng', version: '7.6.1'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.6.0'
+
 }
 
 test {

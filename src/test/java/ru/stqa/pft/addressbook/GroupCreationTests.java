@@ -4,8 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -17,36 +17,32 @@ public class GroupCreationTests {
     private Map<String, Object> vars;
     JavascriptExecutor js;
 
-    @BeforeTest
+    @BeforeMethod
     public void setUp() {
         driver = new ChromeDriver();
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
-        driver.get("http://localhost/addressbook/group.php");
-        manWinMax(10, 10);
-        login("user", "pass", By.cssSelector("input:nth-child(7)"), "admin", "secret");
-    }
-
-    private void manWinMax(int pageload, int implwait) {
         driver.manage().window().maximize();
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageload));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implwait));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        login("admin", "secret");
     }
 
-    private void login(String user, String pass, By by, String username, String password) {
-        returnToGroupPage(By.name(user));
-        driver.findElement(By.name(user)).sendKeys(username);
-        returnToGroupPage(By.name(pass));
-        driver.findElement(By.name(pass)).sendKeys(password);
-        returnToGroupPage(by);
+    private void login(String username, String password) {
+        driver.get("http://localhost/addressbook/group.php");
+        driver.findElement(By.name("user")).click();
+        driver.findElement(By.name("user")).sendKeys(username);
+        driver.findElement(By.name("pass")).click();
+        driver.findElement(By.name("pass")).sendKeys(password);
+        driver.findElement(By.cssSelector("input:nth-child(7)")).click();
     }
 
     @Test
     public void testGroupCreation() {
-        returnToGroupPage(By.linkText("groups"));
+        gotoGroupPage(By.linkText("groups"));
         initGroupCreation();
         fillGroupForm(new GroupData("test1", "test2", "test3"));
-        returnToGroupPage(By.name("submit"));
+        submitGroupCreation(By.name("submit"));
         returnToGroupPage(By.linkText("group page"));
     }
 
@@ -55,24 +51,29 @@ public class GroupCreationTests {
     }
 
     private void initGroupCreation() {
-        returnToGroupPage(By.name("new"));
+        driver.findElement(By.name("new")).click();
     }
 
     private void fillGroupForm(GroupData groupData) {
-        login("group_name", "group_header", By.name("group_footer"), groupData.name(), groupData.header());
+        driver.findElement(By.name("group_name")).click();
+        driver.findElement(By.name("group_name")).sendKeys(groupData.name());
+        driver.findElement(By.name("group_header")).click();
+        driver.findElement(By.name("group_header")).sendKeys(groupData.header());
+        driver.findElement(By.name("group_footer")).click();
         driver.findElement(By.name("group_footer")).sendKeys(groupData.footer());
     }
 
     private void submitGroupCreation(By submit) {
-        gotoGroupPage(submit);
+        driver.findElement(submit).click();
     }
 
     private void returnToGroupPage(By group_page) {
-        submitGroupCreation(group_page);
+        driver.findElement(group_page).click();
     }
 
-    @AfterTest
+    @AfterMethod
     public void tearDown() {
         driver.quit();
     }
+
 }
