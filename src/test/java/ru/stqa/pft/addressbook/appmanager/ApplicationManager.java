@@ -1,23 +1,21 @@
-package ru.stqa.pft.addressbook;
+package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestBase {
-    private WebDriver driver;
-    private Map<String, Object> vars;
+public class ApplicationManager {
+    public WebDriver driver;
+    public Map<String, Object> vars;
     JavascriptExecutor js;
 
-    @BeforeMethod
-    public void setUp() {
+    public void init() {
         driver = new ChromeDriver();
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
@@ -27,7 +25,7 @@ public class TestBase {
         login("admin", "secret");
     }
 
-    private void login(String username, String password) {
+    public void login(String username, String password) {
         driver.get("http://localhost/addressbook/");
         driver.findElement(By.name("user")).click();
         driver.findElement(By.name("user")).sendKeys(username);
@@ -61,17 +59,17 @@ public class TestBase {
         driver.findElement(By.xpath("//a[@href='group.php']")).click();
     }
 
-    public void selectGroups() {
+    public void selectGroup() {
         driver.findElement(By.name("selected[]")).click();
     }
 
-    public void deletionGroups() {
+    public void deleteSelectedGroups() {
         driver.findElement(By.name("delete")).click();
     }
 
-    @AfterMethod
-    public void tearDown() {
+    public void stop() {
         driver.quit();
     }
 
 }
+
