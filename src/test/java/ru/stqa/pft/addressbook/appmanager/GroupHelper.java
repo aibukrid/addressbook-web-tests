@@ -36,4 +36,12 @@ public class GroupHelper extends HelperBase {
         click(By.name("delete"));
     }
 
+    public void initGroupModification() {
+        click(By.xpath("//input[@value='Edit group']"));
+    }
+
+    public void submitGroupModification() {
+        click(By.xpath("//input[@value='Update']"));
+    }
+
 }
