@@ -37,8 +37,4 @@ public class ApplicationManager {
         return groupHelper;
     }
 
-    public SessionHelper getSessionHelper() {
-        return sessionHelper;
-    }
-
 }
