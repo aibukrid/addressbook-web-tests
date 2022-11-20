@@ -74,4 +74,13 @@ public class GroupAndAddressHelper extends HelperBase {
         click(By.xpath("//input[@value='Enter']"));
     }
 
+    public void selectAddress() {
+        click(By.name("selected[]"));
+    }
+
+    public void deleteSelectedAddress() {
+        click(By.xpath("//input[@onclick='DeleteSel()']"));
+        switchTo();
+    }
+
 }
