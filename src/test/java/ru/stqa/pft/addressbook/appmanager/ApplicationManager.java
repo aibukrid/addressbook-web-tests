@@ -9,7 +9,7 @@ public class ApplicationManager {
 
     public WebDriver driver;
 
-    private GroupHelper groupHelper;
+    private GroupAndAddressHelper groupAndAddressHelper;
     private NavigationHelper navigationHelper;
     private SessionHelper sessionHelper;
 
@@ -19,7 +19,7 @@ public class ApplicationManager {
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("http://localhost/addressbook/");
-        groupHelper = new GroupHelper(driver);
+        groupAndAddressHelper = new GroupAndAddressHelper(driver);
         navigationHelper = new NavigationHelper(driver);
         sessionHelper = new SessionHelper(driver);
         sessionHelper.login("admin", "secret");
@@ -33,8 +33,8 @@ public class ApplicationManager {
         return navigationHelper;
     }
 
-    public GroupHelper getGroupHelper() {
-        return groupHelper;
+    public GroupAndAddressHelper getGroupAndAddressHelper() {
+        return groupAndAddressHelper;
     }
 
 }
