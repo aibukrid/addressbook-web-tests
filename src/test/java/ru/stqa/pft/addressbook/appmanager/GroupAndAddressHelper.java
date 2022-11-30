@@ -83,4 +83,11 @@ public class GroupAndAddressHelper extends HelperBase {
         switchTo();
     }
 
+    public void initAddressModification() {
+        click(By.xpath("//a[@href='edit.php?id=3']"));
+    }
+
+    public void submitAddressModification() {
+        click(By.xpath("//input[@value='Update']"));
+    }
 }
